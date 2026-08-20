@@ -40,7 +40,7 @@ UPDATE public.account_passwords
 
 CREATE TRIGGER account_passwords_changed_at_trigger
 BEFORE INSERT OR UPDATE ON public.account_passwords
-FOR EACH ROW EXECUTE FUNCTION public.telesrv_password_changed_at_trigger();
+FOR EACH ROW EXECUTE PROCEDURE public.telesrv_password_changed_at_trigger();
 
 ALTER TABLE public.users
   ADD CONSTRAINT users_deletion_state_check CHECK (
@@ -180,7 +180,7 @@ $$;
 CREATE TRIGGER users_account_delete_at_trigger
 BEFORE INSERT OR UPDATE OF last_seen_at, deleted_at, is_bot
 ON public.users
-FOR EACH ROW EXECUTE FUNCTION public.telesrv_users_account_delete_at_trigger();
+FOR EACH ROW EXECUTE PROCEDURE public.telesrv_users_account_delete_at_trigger();
 
 CREATE OR REPLACE FUNCTION public.telesrv_account_settings_ttl_trigger()
 RETURNS trigger LANGUAGE plpgsql AS $$
@@ -201,7 +201,7 @@ $$;
 CREATE TRIGGER account_settings_ttl_trigger
 AFTER INSERT OR UPDATE OF account_ttl_days OR DELETE
 ON public.account_settings
-FOR EACH ROW EXECUTE FUNCTION public.telesrv_account_settings_ttl_trigger();
+FOR EACH ROW EXECUTE PROCEDURE public.telesrv_account_settings_ttl_trigger();
 
 UPDATE public.users u
    SET account_delete_at = public.telesrv_account_delete_at(

@@ -30,3 +30,7 @@ tmp/
 # IDE
 .idea/
 .vscode/
+
+*.log
+*.exe~
+

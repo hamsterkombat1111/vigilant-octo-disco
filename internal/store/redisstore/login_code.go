@@ -1,4 +1,4 @@
-package redisstore
+﻿package redisstore
 
 import (
 	"context"
@@ -50,7 +50,7 @@ if (record.Code or '') ~= ARGV[3] then
   if attempts >= max_attempts then
     redis.call('DEL', KEYS[1])
   else
-    redis.call('SET', KEYS[1], updated, 'KEEPTTL')
+    local ttl = redis.call('PTTL', KEYS[1]); if ttl > 0 then redis.call('PSETEX', KEYS[1], ttl, updated) else redis.call('SET', KEYS[1], updated) end
   end
   return {1, updated}
 end
@@ -61,7 +61,7 @@ if ARGV[4] == '1' then
   record.SignUpVerified = true
 	record.Revision = ARGV[9]
   local updated = cjson.encode(record)
-  redis.call('SET', KEYS[1], updated, 'KEEPTTL')
+  local ttl = redis.call('PTTL', KEYS[1]); if ttl > 0 then redis.call('PSETEX', KEYS[1], ttl, updated) else redis.call('SET', KEYS[1], updated) end
   return {2, updated}
 end
 redis.call('DEL', KEYS[1])
@@ -117,7 +117,7 @@ if (record.Code or '') ~= ARGV[3] then
   if attempts >= max_attempts then
     redis.call('DEL', KEYS[1], KEYS[2])
   else
-    redis.call('SET', KEYS[1], updated, 'KEEPTTL')
+    local ttl = redis.call('PTTL', KEYS[1]); if ttl > 0 then redis.call('PSETEX', KEYS[1], ttl, updated) else redis.call('SET', KEYS[1], updated) end
   end
   return {1, updated}
 end

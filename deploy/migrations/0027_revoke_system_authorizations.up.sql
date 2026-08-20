@@ -1,8 +1,8 @@
-WITH target AS MATERIALIZED (
+WITH target AS (
 	SELECT auth_key_id
 	FROM public.authorizations
 	WHERE user_id IN (777000, 93372553)
-), target_temp AS MATERIALIZED (
+), target_temp AS (
 	SELECT temp_auth_key_id
 	FROM public.temp_auth_key_bindings
 	WHERE perm_auth_key_id IN (SELECT auth_key_id FROM target)

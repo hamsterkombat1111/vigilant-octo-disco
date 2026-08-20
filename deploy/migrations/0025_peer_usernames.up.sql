@@ -42,10 +42,10 @@ $$;
 
 CREATE TRIGGER users_delete_peer_username
     AFTER DELETE ON public.users
-    FOR EACH ROW EXECUTE FUNCTION public.delete_user_peer_username();
+    FOR EACH ROW EXECUTE PROCEDURE public.delete_user_peer_username();
 
 CREATE TRIGGER channels_delete_peer_username
     AFTER DELETE ON public.channels
-    FOR EACH ROW EXECUTE FUNCTION public.delete_channel_peer_username();
+    FOR EACH ROW EXECUTE PROCEDURE public.delete_channel_peer_username();
 
 DROP TABLE IF EXISTS public.channel_usernames;

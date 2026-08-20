@@ -379,7 +379,7 @@ BEGIN
 END;
 $$;
 CREATE TRIGGER star_gift_listing_guard BEFORE INSERT OR UPDATE ON public.star_gift_listings
-    FOR EACH ROW EXECUTE FUNCTION public.telesrv_guard_star_gift_listing();
+    FOR EACH ROW EXECUTE PROCEDURE public.telesrv_guard_star_gift_listing();
 
 CREATE FUNCTION public.telesrv_check_unique_star_gift_owner() RETURNS trigger LANGUAGE plpgsql AS $$
 DECLARE
@@ -418,8 +418,8 @@ END;
 $$;
 CREATE CONSTRAINT TRIGGER unique_star_gift_owner_guard
     AFTER INSERT OR UPDATE ON public.unique_star_gifts DEFERRABLE INITIALLY DEFERRED
-    FOR EACH ROW EXECUTE FUNCTION public.telesrv_check_unique_star_gift_owner();
+    FOR EACH ROW EXECUTE PROCEDURE public.telesrv_check_unique_star_gift_owner();
 CREATE CONSTRAINT TRIGGER peer_unique_star_gift_owner_guard
     AFTER INSERT OR UPDATE ON public.peer_star_gifts DEFERRABLE INITIALLY DEFERRED
     FOR EACH ROW WHEN (NEW.unique_gift_id IS NOT NULL)
-    EXECUTE FUNCTION public.telesrv_check_unique_star_gift_owner();
+    EXECUTE PROCEDURE public.telesrv_check_unique_star_gift_owner();

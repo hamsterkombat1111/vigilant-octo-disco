@@ -124,7 +124,7 @@ CREATE TRIGGER users_linked_community_read_model_changed
 AFTER UPDATE OF linked_community_id ON public.users
 FOR EACH ROW
 WHEN (OLD.linked_community_id IS DISTINCT FROM NEW.linked_community_id)
-EXECUTE FUNCTION public.telesrv_notify_user_linked_community_read_model();
+EXECUTE PROCEDURE public.telesrv_notify_user_linked_community_read_model();
 
 -- Community notification settings reuse the existing peer-scoped table with a
 -- distinct peer_type. No new scope_kind is required.

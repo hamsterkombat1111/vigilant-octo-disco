@@ -1,10 +1,10 @@
--- 0001_init: telesrv 全量初始 schema（由 0001-0140 迁移链压缩而来，2026-06-19）。
--- 全新项目无生产数据，故不保留逐迁移演进史；本文件 = 迁移链终态 schema（规范形式）+ 规范 seed。
--- 生成：干净库跑满 0001-0140 → 去除 0077 遗留死表 dispatch_outbox_partitioned_legacy →
---       pg_dump --schema-only + --column-inserts seed；剔除 psql 元命令与 search_path 空重置。
--- 功能与旧迁移链终态等价（已用全套 PG 集成测试对照验证）。回退见 0001_init.down.sql。
+-- 0001_init: telesrv е…Ёй‡Џе€ќе§‹ schemaпј€з”± 0001-0140 иїЃз§»й“ѕеЋ‹зј©иЂЊжќҐпјЊ2026-06-19пј‰гЂ‚
+-- е…Ёж–°йЎ№з›®ж— з”џдє§ж•°жЌ®пјЊж•…дёЌдїќз•™йЂђиїЃз§»жј”иї›еЏІпј›жњ¬ж–‡д»¶ = иїЃз§»й“ѕз»€жЂЃ schemaпј€и§„иЊѓеЅўејЏпј‰+ и§„иЊѓ seedгЂ‚
+-- з”џж€ђпјље№Іе‡Ђеє“и·‘ж»Ў 0001-0140 в†’ еЋ»й™¤ 0077 йЃ—з•™ж­»иЎЁ dispatch_outbox_partitioned_legacy в†’
+--       pg_dump --schema-only + --column-inserts seedпј›е‰”й™¤ psql е…ѓе‘Ѕд»¤дёЋ search_path з©єй‡ЌзЅ®гЂ‚
+-- еЉџиѓЅдёЋж—§иїЃз§»й“ѕз»€жЂЃз­‰д»·пј€е·Із”Ёе…ЁеҐ— PG й›†ж€ђжµ‹иЇ•еЇ№з…§йЄЊиЇЃпј‰гЂ‚е›ћйЂЂи§Ѓ 0001_init.down.sqlгЂ‚
 
--- 触发器函数体内为非限定调用，须在 public 下解析。
+-- и§¦еЏ‘е™Ёе‡Ѕж•°дЅ“е†…дёєйќћй™ђе®љи°ѓз”ЁпјЊйЎ»ењЁ public дё‹и§ЈжћђгЂ‚
 SET search_path = public;
 
 --
@@ -18,7 +18,7 @@ SET search_path = public;
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
+-- SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -1213,7 +1213,7 @@ $$;
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
+-- SET default_table_access_method = heap;
 
 --
 -- Name: account_passwords; Type: TABLE; Schema: public; Owner: -
@@ -1266,7 +1266,7 @@ CREATE TABLE public.account_reaction_settings (
     poll_votes_notify_from text DEFAULT 'contacts'::text NOT NULL,
     show_previews boolean DEFAULT true NOT NULL,
     default_reaction_type text DEFAULT 'emoji'::text NOT NULL,
-    default_reaction_value text DEFAULT '👍'::text NOT NULL,
+    default_reaction_value text DEFAULT 'рџ‘Ќ'::text NOT NULL,
     paid_privacy_kind text DEFAULT 'default'::text NOT NULL,
     paid_privacy_peer_type text,
     paid_privacy_peer_id bigint,
@@ -4649,203 +4649,203 @@ CREATE UNIQUE INDEX users_username_lower_unique_idx ON public.users USING btree 
 -- Name: account_privacy_rules account_privacy_rules_channel_participants_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER account_privacy_rules_channel_participants_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.account_privacy_rules FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_privacy_channel_participants_read_model();
+CREATE TRIGGER account_privacy_rules_channel_participants_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.account_privacy_rules FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_privacy_channel_participants_read_model();
 
 
 --
 -- Name: account_privacy_rules account_privacy_rules_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER account_privacy_rules_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.account_privacy_rules FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_privacy_read_model();
+CREATE TRIGGER account_privacy_rules_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.account_privacy_rules FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_privacy_read_model();
 
 
 --
 -- Name: bots bots_channel_participants_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER bots_channel_participants_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.bots FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_bot_channel_participants_read_model();
+CREATE TRIGGER bots_channel_participants_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.bots FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_bot_channel_participants_read_model();
 
 
 --
 -- Name: channel_boost_slots channel_boost_slots_self_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER channel_boost_slots_self_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.channel_boost_slots FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_channel_self_boosts_read_model();
+CREATE TRIGGER channel_boost_slots_self_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.channel_boost_slots FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_channel_self_boosts_read_model();
 
 
 --
 -- Name: channel_dialogs channel_dialogs_dialog_light_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER channel_dialogs_dialog_light_changed AFTER INSERT OR DELETE OR UPDATE ON public.channel_dialogs FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_channel_dialog_light_read_model();
+CREATE TRIGGER channel_dialogs_dialog_light_changed AFTER INSERT OR DELETE OR UPDATE ON public.channel_dialogs FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_channel_dialog_light_read_model();
 
 
 --
 -- Name: channel_members channel_members_participants_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER channel_members_participants_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.channel_members FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_channel_participants_read_model();
+CREATE TRIGGER channel_members_participants_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.channel_members FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_channel_participants_read_model();
 
 
 --
 -- Name: channel_members channel_members_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER channel_members_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.channel_members FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_channel_member_read_model();
+CREATE TRIGGER channel_members_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.channel_members FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_channel_member_read_model();
 
 
 --
 -- Name: channel_message_media channel_message_media_category_counts_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER channel_message_media_category_counts_changed AFTER INSERT OR DELETE OR UPDATE OF channel_id, id, category ON public.channel_message_media FOR EACH ROW EXECUTE FUNCTION public.telesrv_maintain_channel_media_category_counts();
+CREATE TRIGGER channel_message_media_category_counts_changed AFTER INSERT OR DELETE OR UPDATE OF channel_id, id, category ON public.channel_message_media FOR EACH ROW EXECUTE PROCEDURE public.telesrv_maintain_channel_media_category_counts();
 
 
 --
 -- Name: channel_message_media channel_message_media_count_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER channel_message_media_count_changed AFTER INSERT OR DELETE OR UPDATE ON public.channel_message_media FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_channel_media_count_read_model();
+CREATE TRIGGER channel_message_media_count_changed AFTER INSERT OR DELETE OR UPDATE ON public.channel_message_media FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_channel_media_count_read_model();
 
 
 --
 -- Name: channel_messages channel_messages_media_category_count_visibility_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER channel_messages_media_category_count_visibility_changed AFTER UPDATE OF deleted ON public.channel_messages FOR EACH ROW WHEN ((old.deleted IS DISTINCT FROM new.deleted)) EXECUTE FUNCTION public.telesrv_maintain_channel_media_visibility_counts();
+CREATE TRIGGER channel_messages_media_category_count_visibility_changed AFTER UPDATE OF deleted ON public.channel_messages FOR EACH ROW WHEN ((old.deleted IS DISTINCT FROM new.deleted)) EXECUTE PROCEDURE public.telesrv_maintain_channel_media_visibility_counts();
 
 
 --
 -- Name: channel_messages channel_messages_media_count_visibility_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER channel_messages_media_count_visibility_changed AFTER UPDATE OF deleted ON public.channel_messages FOR EACH ROW WHEN ((old.deleted IS DISTINCT FROM new.deleted)) EXECUTE FUNCTION public.telesrv_notify_channel_media_count_visibility_read_model();
+CREATE TRIGGER channel_messages_media_count_visibility_changed AFTER UPDATE OF deleted ON public.channel_messages FOR EACH ROW WHEN ((old.deleted IS DISTINCT FROM new.deleted)) EXECUTE PROCEDURE public.telesrv_notify_channel_media_count_visibility_read_model();
 
 
 --
 -- Name: channels channels_notify_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER channels_notify_changed AFTER INSERT OR DELETE OR UPDATE ON public.channels FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_channel_changed();
+CREATE TRIGGER channels_notify_changed AFTER INSERT OR DELETE OR UPDATE ON public.channels FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_channel_changed();
 
 
 --
 -- Name: channels channels_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER channels_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.channels FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_channel_base_read_model();
+CREATE TRIGGER channels_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.channels FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_channel_base_read_model();
 
 
 --
 -- Name: contact_blocks contact_blocks_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER contact_blocks_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.contact_blocks FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_contact_block_read_model();
+CREATE TRIGGER contact_blocks_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.contact_blocks FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_contact_block_read_model();
 
 
 --
 -- Name: contacts contacts_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER contacts_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.contacts FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_contact_read_model();
+CREATE TRIGGER contacts_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.contacts FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_contact_read_model();
 
 
 --
 -- Name: dialog_drafts dialog_drafts_dialog_light_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER dialog_drafts_dialog_light_changed AFTER INSERT OR DELETE OR UPDATE ON public.dialog_drafts FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_dialog_light_read_model();
+CREATE TRIGGER dialog_drafts_dialog_light_changed AFTER INSERT OR DELETE OR UPDATE ON public.dialog_drafts FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_dialog_light_read_model();
 
 
 --
 -- Name: dialogs dialogs_dialog_light_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER dialogs_dialog_light_changed AFTER INSERT OR DELETE OR UPDATE ON public.dialogs FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_dialog_light_read_model();
+CREATE TRIGGER dialogs_dialog_light_changed AFTER INSERT OR DELETE OR UPDATE ON public.dialogs FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_dialog_light_read_model();
 
 
 --
 -- Name: dialogs dialogs_private_media_count_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER dialogs_private_media_count_read_model_changed AFTER INSERT OR DELETE OR UPDATE OF user_id, peer_type, peer_id ON public.dialogs FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_private_media_count_dialog_read_model();
+CREATE TRIGGER dialogs_private_media_count_read_model_changed AFTER INSERT OR DELETE OR UPDATE OF user_id, peer_type, peer_id ON public.dialogs FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_private_media_count_dialog_read_model();
 
 
 --
 -- Name: message_box_media message_box_media_category_counts_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER message_box_media_category_counts_changed AFTER INSERT OR DELETE OR UPDATE OF owner_user_id, box_id, peer_id, category ON public.message_box_media FOR EACH ROW EXECUTE FUNCTION public.telesrv_maintain_private_media_category_counts();
+CREATE TRIGGER message_box_media_category_counts_changed AFTER INSERT OR DELETE OR UPDATE OF owner_user_id, box_id, peer_id, category ON public.message_box_media FOR EACH ROW EXECUTE PROCEDURE public.telesrv_maintain_private_media_category_counts();
 
 
 --
 -- Name: message_box_media message_box_media_count_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER message_box_media_count_changed AFTER INSERT OR DELETE OR UPDATE OF owner_user_id, peer_id, category ON public.message_box_media FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_private_media_count_read_model();
+CREATE TRIGGER message_box_media_count_changed AFTER INSERT OR DELETE OR UPDATE OF owner_user_id, peer_id, category ON public.message_box_media FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_private_media_count_read_model();
 
 
 --
 -- Name: message_boxes message_boxes_media_category_count_visibility_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER message_boxes_media_category_count_visibility_changed AFTER UPDATE OF deleted ON public.message_boxes FOR EACH ROW WHEN ((old.deleted IS DISTINCT FROM new.deleted)) EXECUTE FUNCTION public.telesrv_maintain_private_media_visibility_counts();
+CREATE TRIGGER message_boxes_media_category_count_visibility_changed AFTER UPDATE OF deleted ON public.message_boxes FOR EACH ROW WHEN ((old.deleted IS DISTINCT FROM new.deleted)) EXECUTE PROCEDURE public.telesrv_maintain_private_media_visibility_counts();
 
 
 --
 -- Name: message_boxes message_boxes_media_count_visibility_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER message_boxes_media_count_visibility_changed AFTER UPDATE OF deleted ON public.message_boxes FOR EACH ROW WHEN ((old.deleted IS DISTINCT FROM new.deleted)) EXECUTE FUNCTION public.telesrv_notify_private_media_count_visibility_read_model();
+CREATE TRIGGER message_boxes_media_count_visibility_changed AFTER UPDATE OF deleted ON public.message_boxes FOR EACH ROW WHEN ((old.deleted IS DISTINCT FROM new.deleted)) EXECUTE PROCEDURE public.telesrv_notify_private_media_count_visibility_read_model();
 
 
 --
 -- Name: profile_photos profile_photos_channel_participants_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER profile_photos_channel_participants_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.profile_photos FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_profile_photo_channel_participants_read_model();
+CREATE TRIGGER profile_photos_channel_participants_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.profile_photos FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_profile_photo_channel_participants_read_model();
 
 
 --
 -- Name: profile_photos profile_photos_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER profile_photos_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.profile_photos FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_profile_photo_read_model();
+CREATE TRIGGER profile_photos_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.profile_photos FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_profile_photo_read_model();
 
 
 --
 -- Name: stories telesrv_stories_story_peer_read_model; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER telesrv_stories_story_peer_read_model AFTER INSERT OR DELETE OR UPDATE ON public.stories FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_story_peer_read_model();
+CREATE TRIGGER telesrv_stories_story_peer_read_model AFTER INSERT OR DELETE OR UPDATE ON public.stories FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_story_peer_read_model();
 
 
 --
 -- Name: story_hidden_peers telesrv_story_hidden_peers_story_peer_read_model; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER telesrv_story_hidden_peers_story_peer_read_model AFTER INSERT OR DELETE OR UPDATE ON public.story_hidden_peers FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_story_peer_read_model();
+CREATE TRIGGER telesrv_story_hidden_peers_story_peer_read_model AFTER INSERT OR DELETE OR UPDATE ON public.story_hidden_peers FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_story_peer_read_model();
 
 
 --
 -- Name: user_channel_member_index user_channel_member_index_active_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER user_channel_member_index_active_read_model_changed AFTER INSERT OR DELETE OR UPDATE OF user_id, channel_id, status, deleted ON public.user_channel_member_index FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_channel_active_memberships_read_model();
+CREATE TRIGGER user_channel_member_index_active_read_model_changed AFTER INSERT OR DELETE OR UPDATE OF user_id, channel_id, status, deleted ON public.user_channel_member_index FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_channel_active_memberships_read_model();
 
 
 --
 -- Name: users users_channel_participants_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER users_channel_participants_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_user_channel_participants_read_model();
+CREATE TRIGGER users_channel_participants_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.users FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_user_channel_participants_read_model();
 
 
 --
 -- Name: users users_read_model_changed; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER users_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_user_base_read_model();
+CREATE TRIGGER users_read_model_changed AFTER INSERT OR DELETE OR UPDATE ON public.users FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_user_base_read_model();
 
 
 --
@@ -5526,9 +5526,9 @@ ALTER TABLE ONLY public.user_update_watermarks
 
 
 
--- ===================== 规范 seed 数据 =====================
--- 关触发器+FK 精确装载 seed（等价 pg_restore），避免 seed 其它表触发 read-model 触发器二次生成行而撞键。
--- session_replication_role 需超级权限，与本迁移已有的 CREATE EXTENSION pg_trgm 同一前提。
+-- ===================== и§„иЊѓ seed ж•°жЌ® =====================
+-- е…іи§¦еЏ‘е™Ё+FK зІѕзЎ®иЈ…иЅЅ seedпј€з­‰д»· pg_restoreпј‰пјЊйЃїе…Ќ seed е…¶е®ѓиЎЁи§¦еЏ‘ read-model и§¦еЏ‘е™ЁдєЊж¬Ўз”џж€ђиЎЊиЂЊж’ћй”®гЂ‚
+-- session_replication_role йњЂи¶…зє§жќѓй™ђпјЊдёЋжњ¬иїЃз§»е·Іжњ‰зљ„ CREATE EXTENSION pg_trgm еђЊдёЂе‰ЌжЏђгЂ‚
 SET session_replication_role = replica;
 
 --
@@ -5542,7 +5542,7 @@ SET session_replication_role = replica;
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
+-- SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -5580,7 +5580,7 @@ INSERT INTO public.users (id, access_hash, phone, first_name, last_name, usernam
 -- Data for Name: app_configs; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.app_configs (client, hash, config_json, updated_at) VALUES ('tdesktop', 5, '{"quote_length_max": 1024, "reactions_default": {"_": "reactionEmoji", "emoticon": "👍"}, "reactions_uniq_max": 11, "reactions_in_chat_max": 3, "telegram_antispam_user_id": "5434988373", "pm_read_date_expire_period": 604800, "reactions_user_max_default": 1, "chat_read_mark_expire_period": 604800, "chat_read_mark_size_threshold": 50, "telegram_antispam_group_size_min": 200}', '2026-06-19 13:35:52.201256+00');
+INSERT INTO public.app_configs (client, hash, config_json, updated_at) VALUES ('tdesktop', 5, '{"quote_length_max": 1024, "reactions_default": {"_": "reactionEmoji", "emoticon": "рџ‘Ќ"}, "reactions_uniq_max": 11, "reactions_in_chat_max": 3, "telegram_antispam_user_id": "5434988373", "pm_read_date_expire_period": 604800, "reactions_user_max_default": 1, "chat_read_mark_expire_period": 604800, "chat_read_mark_size_threshold": 50, "telegram_antispam_group_size_min": 200}', '2026-06-19 13:35:52.201256+00');
 
 
 --

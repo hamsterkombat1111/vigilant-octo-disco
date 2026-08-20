@@ -21,7 +21,7 @@ $$;
 DROP TRIGGER IF EXISTS channel_invites_channel_base_read_model_changed ON public.channel_invites;
 CREATE TRIGGER channel_invites_channel_base_read_model_changed
 AFTER INSERT OR DELETE OR UPDATE OF channel_id, revoked ON public.channel_invites
-FOR EACH ROW EXECUTE FUNCTION public.telesrv_notify_channel_invites_channel_base_read_model();
+FOR EACH ROW EXECUTE PROCEDURE public.telesrv_notify_channel_invites_channel_base_read_model();
 
 WITH missing AS (
     SELECT

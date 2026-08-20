@@ -1,12 +1,12 @@
--- bot 资料(name/about/description/commands/menu_button)变更都会 bump users.bot_info_version
--- (BumpBotInfoVersion,见 bot.sql)。群信息页的 ChannelFull.bot_info 由 RPC 层
--- channelFullBotInfoCache 缓存(键=viewer+channel,无法按 bot 定位),其跨实例失效此前只挂在
--- channel_base/channel_member 事件上——bot 自身改资料(经 BotFather 本地路径,或其它实例的
--- bots.* RPC)不会失效该缓存,导致群信息页里该 bot 的简介/命令陈旧最长 30 分钟(TTL)。
+-- bot иµ„ж–™(name/about/description/commands/menu_button)еЏж›ґйѓЅдјљ bump users.bot_info_version
+-- (BumpBotInfoVersion,и§Ѓ bot.sql)гЂ‚зѕ¤дїЎжЃЇйЎµзљ„ ChannelFull.bot_info з”± RPC е±‚
+-- channelFullBotInfoCache зј“е­(й”®=viewer+channel,ж— жі•жЊ‰ bot е®љдЅЌ),е…¶и·Ёе®ћдѕ‹е¤±ж•€ж­¤е‰ЌеЏЄжЊ‚ењЁ
+-- channel_base/channel_member дє‹д»¶дёЉвЂ”вЂ”bot и‡Єиє«ж”№иµ„ж–™(з»Џ BotFather жњ¬ењ°и·Їеѕ„,ж€–е…¶е®ѓе®ћдѕ‹зљ„
+-- bots.* RPC)дёЌдјље¤±ж•€иЇҐзј“е­,еЇји‡ґзѕ¤дїЎжЃЇйЎµй‡ЊиЇҐ bot зљ„з®Ђд»‹/е‘Ѕд»¤й™€ж—§жњЂй•ї 30 е€†й’џ(TTL)гЂ‚
 --
--- 这里给 bot 资料变更单独发一个 'bot_full' read-model 事件;ReadModelChangeListener 收到即
--- flush channelFullBotInfoCache(本地 BotFather 路径与跨实例 bots.* RPC 两条更新路径都覆盖)。
--- 与既有 user_base 事件(覆盖 RPC 投影/Redis user:base/bot 资料缓存)互补,不改动 user_base 热路径。
+-- иї™й‡Њз»™ bot иµ„ж–™еЏж›ґеЌ•з‹¬еЏ‘дёЂдёЄ 'bot_full' read-model дє‹д»¶;ReadModelChangeListener ж”¶е€°еЌі
+-- flush channelFullBotInfoCache(жњ¬ењ° BotFather и·Їеѕ„дёЋи·Ёе®ћдѕ‹ bots.* RPC дё¤жќЎж›ґж–°и·Їеѕ„йѓЅи¦†з›–)гЂ‚
+-- дёЋж—ўжњ‰ user_base дє‹д»¶(и¦†з›– RPC жЉ•еЅ±/Redis user:base/bot иµ„ж–™зј“е­)дє’иЎҐ,дёЌж”№еЉЁ user_base зѓ­и·Їеѕ„гЂ‚
 
 CREATE FUNCTION public.telesrv_notify_bot_full_read_model() RETURNS trigger
     LANGUAGE plpgsql
@@ -22,4 +22,4 @@ $$;
 CREATE TRIGGER users_bot_full_read_model_changed
     AFTER UPDATE ON public.users
     FOR EACH ROW
-    EXECUTE FUNCTION public.telesrv_notify_bot_full_read_model();
+    EXECUTE PROCEDURE public.telesrv_notify_bot_full_read_model();

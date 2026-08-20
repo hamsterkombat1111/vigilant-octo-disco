@@ -415,6 +415,9 @@ func (s *Service) SetAccountFrozen(ctx context.Context, req SetAccountFrozenRequ
 	now := s.now().UTC()
 	appealURL := strings.TrimSpace(req.AppealURL)
 	if req.Frozen {
+		if appealURL == "" {
+			appealURL = "https://telesrv.net/appeal"
+		}
 		if req.Until.IsZero() || req.Until.Unix() > math.MaxInt32 {
 			return CommandResult{}, fmt.Errorf("freeze_until must be a non-zero int32 Unix timestamp")
 		}
@@ -969,13 +972,23 @@ func (s *Service) ImportOfficialStarGift(ctx context.Context, req ImportOfficial
 			rarityCounts[string(rarityKind)]++
 		}
 		backdrops := make([]domain.StarGiftCollectibleAttribute, 0, len(bundle.Collectible.Backdrops))
+		seenOfficialBackdropIDs := make(map[int]bool)
+		nextOfficialBackdropID := 0
 		for index, value := range bundle.Collectible.Backdrops {
 			rarityKind, permille, err := officialRarity(value.Rarity)
 			if err != nil {
 				return CommandResult{}, err
 			}
+			bid := value.BackdropID
+			if seenOfficialBackdropIDs[bid] {
+				for seenOfficialBackdropIDs[nextOfficialBackdropID] {
+					nextOfficialBackdropID++
+				}
+				bid = nextOfficialBackdropID
+			}
+			seenOfficialBackdropIDs[bid] = true
 			backdrops = append(backdrops, domain.StarGiftCollectibleAttribute{Kind: domain.StarGiftCollectibleBackdrop,
-				Name: strings.TrimSpace(value.Name), BackdropID: value.BackdropID, CenterColor: value.CenterColor,
+				Name: strings.TrimSpace(value.Name), BackdropID: bid, CenterColor: value.CenterColor,
 				EdgeColor: value.EdgeColor, PatternColor: value.PatternColor, TextColor: value.TextColor,
 				RarityKind: rarityKind, RarityPermille: permille, SortOrder: index})
 			rarityCounts[string(rarityKind)]++
@@ -1102,9 +1115,19 @@ func (s *Service) PublishStarGiftCollectibles(ctx context.Context, req PublishSt
 		return CommandResult{}, err
 	}
 	backdrops := make([]domain.StarGiftCollectibleAttribute, len(req.Backdrops))
+	seenCustomBackdropIDs := make(map[int]bool)
+	nextCustomBackdropID := 0
 	for i, backdrop := range req.Backdrops {
+		bid := backdrop.BackdropID
+		if seenCustomBackdropIDs[bid] {
+			for seenCustomBackdropIDs[nextCustomBackdropID] {
+				nextCustomBackdropID++
+			}
+			bid = nextCustomBackdropID
+		}
+		seenCustomBackdropIDs[bid] = true
 		backdrops[i] = domain.StarGiftCollectibleAttribute{
-			Kind: domain.StarGiftCollectibleBackdrop, Name: strings.TrimSpace(backdrop.Name), BackdropID: backdrop.BackdropID,
+			Kind: domain.StarGiftCollectibleBackdrop, Name: strings.TrimSpace(backdrop.Name), BackdropID: bid,
 			CenterColor: backdrop.CenterColor, EdgeColor: backdrop.EdgeColor, PatternColor: backdrop.PatternColor,
 			TextColor: backdrop.TextColor, RarityKind: domain.StarGiftRarityPermille,
 			RarityPermille: backdrop.RarityPermille, SortOrder: backdrop.SortOrder,

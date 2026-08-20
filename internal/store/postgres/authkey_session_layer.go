@@ -1,4 +1,4 @@
-package postgres
+﻿package postgres
 
 import (
 	"context"
@@ -221,7 +221,7 @@ func (s *AuthKeyStore) DeleteExpiredSessionLayers(ctx context.Context, limit int
 	}
 	var deleted int
 	err := s.db.QueryRow(ctx, `
-WITH candidates AS MATERIALIZED (
+WITH candidates AS (
   SELECT raw_auth_key_id, session_id
   FROM auth_key_session_layers
   WHERE expires_at <= now()

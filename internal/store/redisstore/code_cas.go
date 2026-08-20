@@ -1,4 +1,4 @@
-package redisstore
+﻿package redisstore
 
 import (
 	"context"
@@ -41,7 +41,7 @@ end
 if (record.Purpose or '') ~= '' or record.Revision ~= ARGV[2] then
   return 0
 end
-redis.call('SET', KEYS[1], ARGV[3], 'KEEPTTL')
+local ttl = redis.call('PTTL', KEYS[1]); if ttl > 0 then redis.call('PSETEX', KEYS[1], ttl, ARGV[3]) else redis.call('SET', KEYS[1], ARGV[3]) end
 return 1
 `
 

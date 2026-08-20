@@ -1,17 +1,30 @@
--- Claim 只需要查看每个用户当前未完成 head。把 head 持久化后，领取复杂度由
--- “扫描全部 outbox 积压并 DISTINCT ON”降为“扫描有积压的用户 lane”。
--- 迁移期间阻止并发写，保证 backfill 与随后安装的触发器之间没有缺口。
+-- Claim еЏЄйњЂи¦ЃжџҐзњ‹жЇЏдёЄз”Ёж€·еЅ“е‰ЌжњЄе®Њж€ђ headгЂ‚жЉЉ head жЊЃд№…еЊ–еђЋпјЊйў†еЏ–е¤Ќжќ‚еє¦з”±
+-- вЂњж‰«жЏЏе…ЁйѓЁ outbox з§ЇеЋ‹е№¶ DISTINCT ONвЂќй™ЌдёєвЂњж‰«жЏЏжњ‰з§ЇеЋ‹зљ„з”Ёж€· laneвЂќгЂ‚
+-- иїЃз§»жњџй—ґй»ж­ўе№¶еЏ‘е†™пјЊдїќиЇЃ backfill дёЋйљЏеђЋе®‰иЈ…зљ„и§¦еЏ‘е™Ёд№‹й—ґжІЎжњ‰зјєеЏЈгЂ‚
 LOCK TABLE dispatch_outbox IN SHARE ROW EXCLUSIVE MODE;
 
 CREATE TABLE dispatch_outbox_user_heads (
     target_user_id bigint PRIMARY KEY,
     head_id bigint NOT NULL,
     head_pts integer NOT NULL CHECK (head_pts >= 0),
-    logical_shard smallint GENERATED ALWAYS AS (
-        mod(target_user_id, 256::bigint)::smallint
-    ) STORED,
+    logical_shard smallint NOT NULL DEFAULT 0,
     CHECK (logical_shard >= 0 AND logical_shard < 256)
 );
+
+CREATE OR REPLACE FUNCTION dispatch_outbox_user_heads_set_shard()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    NEW.logical_shard := mod(NEW.target_user_id, 256::bigint)::smallint;
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER dispatch_outbox_user_heads_set_shard_trg
+BEFORE INSERT OR UPDATE ON dispatch_outbox_user_heads
+FOR EACH ROW
+EXECUTE PROCEDURE dispatch_outbox_user_heads_set_shard();
 
 CREATE INDEX dispatch_outbox_user_heads_shard_idx
     ON dispatch_outbox_user_heads (logical_shard, target_user_id);
@@ -42,8 +55,8 @@ BEGIN
         RETURN NULL;
     END IF;
 
-    -- 删除非 head 不需要重算。删除 head 时用 (target_user_id, pts, id)
-    -- 索引找下一条；failed head 同样会一直阻塞，直到被显式删除。
+    -- е€ й™¤йќћ head дёЌйњЂи¦Ѓй‡Ќз®—гЂ‚е€ й™¤ head ж—¶з”Ё (target_user_id, pts, id)
+    -- зґўеј•ж‰ѕдё‹дёЂжќЎпј›failed head еђЊж ·дјљдёЂз›ґй»еЎћпјЊз›ґе€°иў«жѕејЏе€ й™¤гЂ‚
     DELETE FROM dispatch_outbox_user_heads
     WHERE target_user_id = OLD.target_user_id
       AND head_id = OLD.id
@@ -69,12 +82,12 @@ $$;
 CREATE TRIGGER dispatch_outbox_insert_user_head
 AFTER INSERT ON dispatch_outbox
 FOR EACH ROW
-EXECUTE FUNCTION dispatch_outbox_maintain_user_head();
+EXECUTE PROCEDURE dispatch_outbox_maintain_user_head();
 
 CREATE TRIGGER dispatch_outbox_delete_user_head
 AFTER DELETE ON dispatch_outbox
 FOR EACH ROW
-EXECUTE FUNCTION dispatch_outbox_maintain_user_head();
+EXECUTE PROCEDURE dispatch_outbox_maintain_user_head();
 
--- Claim 已不再读取表达式 shard 索引；移除它避免每次 enqueue 的重复写放大。
+-- Claim е·ІдёЌе†ЌиЇ»еЏ–иЎЁиѕѕејЏ shard зґўеј•пј›з§»й™¤е®ѓйЃїе…ЌжЇЏж¬Ў enqueue зљ„й‡Ќе¤Ќе†™ж”ѕе¤§гЂ‚
 DROP INDEX IF EXISTS dispatch_outbox_logical_shard_head_idx;

@@ -1,4 +1,4 @@
-package postgres
+﻿package postgres
 
 import (
 	"context"
@@ -531,7 +531,7 @@ func (s *StarGiftStore) CreateCollection(ctx context.Context, owner domain.Peer,
 	}
 	var result domain.StarGiftCollection
 	err := withTx(ctx, s.db, "create star gift collection", func(tx pgx.Tx) error {
-		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`, starGiftCollectionLockKey(owner)); err != nil {
+		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtext($1)::bigint)`, starGiftCollectionLockKey(owner)); err != nil {
 			return err
 		}
 		var count int
@@ -561,7 +561,7 @@ VALUES ($1,$2,$3,$4,$5) RETURNING collection_id, created_at, updated_at`, string
 func (s *StarGiftStore) UpdateCollection(ctx context.Context, owner domain.Peer, collectionID int, patch domain.StarGiftCollectionPatch) (domain.StarGiftCollection, error) {
 	var result domain.StarGiftCollection
 	err := withTx(ctx, s.db, "update star gift collection", func(tx pgx.Tx) error {
-		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`, starGiftCollectionLockKey(owner)); err != nil {
+		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtext($1)::bigint)`, starGiftCollectionLockKey(owner)); err != nil {
 			return err
 		}
 		if err := tx.QueryRow(ctx, `
@@ -636,7 +636,7 @@ WHERE owner_peer_type=$1 AND owner_peer_id=$2 AND collection_id=$3 RETURNING upd
 func (s *StarGiftStore) DeleteCollection(ctx context.Context, owner domain.Peer, collectionID int) (bool, error) {
 	var changed bool
 	err := withTx(ctx, s.db, "delete star gift collection", func(tx pgx.Tx) error {
-		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`, starGiftCollectionLockKey(owner)); err != nil {
+		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtext($1)::bigint)`, starGiftCollectionLockKey(owner)); err != nil {
 			return err
 		}
 		tag, err := tx.Exec(ctx, `DELETE FROM star_gift_collections WHERE owner_peer_type=$1 AND owner_peer_id=$2 AND collection_id=$3`, string(owner.Type), owner.ID, collectionID)
@@ -660,7 +660,7 @@ FROM ordered o WHERE c.collection_id=o.collection_id`, string(owner.Type), owner
 
 func (s *StarGiftStore) ReorderCollections(ctx context.Context, owner domain.Peer, collectionIDs []int) error {
 	return withTx(ctx, s.db, "reorder star gift collections", func(tx pgx.Tx) error {
-		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`, starGiftCollectionLockKey(owner)); err != nil {
+		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtext($1)::bigint)`, starGiftCollectionLockKey(owner)); err != nil {
 			return err
 		}
 		rows, err := tx.Query(ctx, `SELECT collection_id FROM star_gift_collections WHERE owner_peer_type=$1 AND owner_peer_id=$2 FOR UPDATE`, string(owner.Type), owner.ID)
@@ -691,7 +691,7 @@ func (s *StarGiftStore) ReorderCollections(ctx context.Context, owner domain.Pee
 
 func (s *StarGiftStore) SetPinned(ctx context.Context, owner domain.Peer, savedGiftIDs []int64) error {
 	return withTx(ctx, s.db, "set pinned star gifts", func(tx pgx.Tx) error {
-		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`, starGiftCollectionLockKey(owner)); err != nil {
+		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtext($1)::bigint)`, starGiftCollectionLockKey(owner)); err != nil {
 			return err
 		}
 		ids, err := validatePostgresCollectionGiftIDs(ctx, tx, owner, savedGiftIDs)

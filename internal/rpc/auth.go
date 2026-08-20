@@ -564,6 +564,7 @@ func (r *Router) onAuthSignIn(ctx context.Context, req *tg.AuthSignInRequest) (t
 
 func (r *Router) finishAuthSignIn(ctx context.Context, u domain.User, needSignUp bool, err error) (tg.AuthAuthorizationClass, error) {
 	if err != nil {
+		r.log.Error("finishAuthSignIn failed", zap.Error(err), zap.Bool("needSignUp", needSignUp), zap.Int64("user_id", u.ID))
 		if errors.Is(err, domain.ErrSessionPasswordNeeded) && u.ID != 0 {
 			// 两步验证未完成：绝不能把 auth_key/session 标记为已登录，否则客户端忽略
 			// SESSION_PASSWORD_NEEDED、直接调用业务 RPC 即可绕过 2FA。失效缓存并把 session

@@ -1,4 +1,4 @@
-package postgres
+﻿package postgres
 
 import (
 	"context"
@@ -220,7 +220,7 @@ JOIN dispatch_outbox d
 	requirePlanNotContains(t, dispatchPlan, "Seq Scan")
 
 	failedCleanupPlan := explainText(t, ctx, tx, `
-WITH doomed AS MATERIALIZED (
+WITH doomed AS (
   SELECT target_user_id, head_id AS id
   FROM dispatch_outbox_user_heads
   WHERE status = 'failed'

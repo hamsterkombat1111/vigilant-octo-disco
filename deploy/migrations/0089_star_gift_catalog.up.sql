@@ -78,4 +78,4 @@ $$;
 
 CREATE TRIGGER star_gift_catalog_changed
     AFTER INSERT OR UPDATE OR DELETE ON public.star_gift_catalog
-    FOR EACH STATEMENT EXECUTE FUNCTION public.telesrv_notify_star_gift_catalog_changed();
+    FOR EACH STATEMENT EXECUTE PROCEDURE public.telesrv_notify_star_gift_catalog_changed();

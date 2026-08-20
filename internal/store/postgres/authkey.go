@@ -1,4 +1,4 @@
-package postgres
+﻿package postgres
 
 import (
 	"context"
@@ -212,11 +212,11 @@ func deleteAuthKeyTx(ctx context.Context, tx pgx.Tx, keyID int64) error {
 	}
 	var touched int
 	if err := tx.QueryRow(ctx, `
-WITH doomed_temp AS MATERIALIZED (
+WITH doomed_temp AS (
 	SELECT temp_auth_key_id
 	FROM temp_auth_key_bindings
 	WHERE perm_auth_key_id = $1
-), doomed_keys AS MATERIALIZED (
+), doomed_keys AS (
 	SELECT $1::bigint AS auth_key_id
 	UNION
 	SELECT temp_auth_key_id FROM doomed_temp
@@ -365,7 +365,7 @@ FOR UPDATE SKIP LOCKED`, candidates)
 	// activity and protection predicate. Never delete from the phase-1 hint.
 	var deleted int
 	err = tx.QueryRow(ctx, `
-WITH still_orphaned AS MATERIALIZED (
+WITH still_orphaned AS (
   SELECT k.auth_key_id
   FROM auth_keys AS k
   WHERE k.auth_key_id = ANY($3::bigint[])

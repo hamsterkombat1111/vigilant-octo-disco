@@ -79,4 +79,4 @@ $$;
 CREATE TRIGGER dispatch_outbox_update_user_head
 AFTER UPDATE OF status, next_attempt_at, updated_at ON dispatch_outbox
 FOR EACH ROW
-EXECUTE FUNCTION dispatch_outbox_maintain_user_head();
+EXECUTE PROCEDURE dispatch_outbox_maintain_user_head();

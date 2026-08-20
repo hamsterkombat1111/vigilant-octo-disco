@@ -1,4 +1,4 @@
-package postgres
+﻿package postgres
 
 import (
 	"context"
@@ -77,7 +77,7 @@ func (s *StarGiftLifecycleStore) ConvertStarGift(ctx context.Context, req domain
 
 	var result domain.StarGiftConvertResult
 	err := withTx(ctx, s.db, "convert star gift aggregate", func(tx pgx.Tx) error {
-		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1,0))`, starGiftCollectionLockKey(req.Ref.Owner)); err != nil {
+		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtext($1)::bigint)`, starGiftCollectionLockKey(req.Ref.Owner)); err != nil {
 			return fmt.Errorf("lock star gift owner collections: %w", err)
 		}
 		saved, err := lockSavedStarGiftForUpgrade(ctx, tx, req.Ref)

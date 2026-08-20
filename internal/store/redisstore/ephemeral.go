@@ -1,4 +1,4 @@
-package redisstore
+﻿package redisstore
 
 import (
 	"bytes"
@@ -278,7 +278,7 @@ end
 if redis.call('PTTL', KEYS[1]) <= 0 then
   return {4, ''}
 end
-redis.call('SET', KEYS[1], ARGV[2], 'KEEPTTL')
+local ttl = redis.call('PTTL', KEYS[1]); if ttl > 0 then redis.call('PSETEX', KEYS[1], ttl, ARGV[2]) else redis.call('SET', KEYS[1], ARGV[2]) end
 return {1, ARGV[2]}
 `)
 
@@ -346,7 +346,7 @@ end
 if redis.call('PTTL', KEYS[1]) <= 0 then
   return {4, ''}
 end
-redis.call('SET', KEYS[1], ARGV[2], 'KEEPTTL')
+local ttl = redis.call('PTTL', KEYS[1]); if ttl > 0 then redis.call('PSETEX', KEYS[1], ttl, ARGV[2]) else redis.call('SET', KEYS[1], ARGV[2]) end
 return {1, ARGV[2]}
 `)
 

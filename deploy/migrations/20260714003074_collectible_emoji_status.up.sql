@@ -137,7 +137,7 @@ $$;
 CREATE TRIGGER unique_star_gifts_clear_invalid_emoji_status
 AFTER UPDATE OF owner_peer_type, owner_peer_id, owner_address, burned
 ON public.unique_star_gifts
-FOR EACH ROW EXECUTE FUNCTION public.telesrv_clear_invalid_collectible_emoji_status();
+FOR EACH ROW EXECUTE PROCEDURE public.telesrv_clear_invalid_collectible_emoji_status();
 
 -- Deleted-user tombstones must not retain the new collectible facts.
 ALTER TABLE public.users DROP CONSTRAINT IF EXISTS users_deletion_state_check;

@@ -1,4 +1,4 @@
-package postgres
+﻿package postgres
 
 import (
 	"context"
@@ -174,7 +174,7 @@ func (s *StarGiftStore) CreateCatalogRevision(ctx context.Context, write domain.
 		}
 		revision := 1
 		if giftID == 0 {
-			if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended('star_gift_catalog', 0))`); err != nil {
+			if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtext('star_gift_catalog')::bigint)`); err != nil {
 				return fmt.Errorf("lock star gift catalog capacity: %w", err)
 			}
 			var catalogCount int
@@ -761,7 +761,7 @@ func (s *StarGiftStore) MarkConverted(ctx context.Context, ref domain.SavedStarG
 	}
 	out := domain.SavedStarGift{}
 	err := withTx(ctx, s.db, "convert star gift", func(tx pgx.Tx) error {
-		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`, starGiftCollectionLockKey(ref.Owner)); err != nil {
+		if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtext($1)::bigint)`, starGiftCollectionLockKey(ref.Owner)); err != nil {
 			return fmt.Errorf("lock star gift owner collections: %w", err)
 		}
 		where, args := savedStarGiftRefWhere(ref)

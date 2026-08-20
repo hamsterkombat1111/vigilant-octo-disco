@@ -211,7 +211,7 @@ $$;
 
 CREATE TRIGGER star_gift_collectible_revision_guard
     BEFORE UPDATE OR DELETE ON public.star_gift_collectible_revisions
-    FOR EACH ROW EXECUTE FUNCTION public.telesrv_guard_collectible_revision();
+    FOR EACH ROW EXECUTE PROCEDURE public.telesrv_guard_collectible_revision();
 
 CREATE FUNCTION public.telesrv_guard_collectible_attribute() RETURNS trigger
     LANGUAGE plpgsql AS $$
@@ -231,8 +231,8 @@ END;
 $$;
 
 CREATE TRIGGER star_gift_collectible_model_guard BEFORE UPDATE OR DELETE ON public.star_gift_collectible_models
-    FOR EACH ROW EXECUTE FUNCTION public.telesrv_guard_collectible_attribute();
+    FOR EACH ROW EXECUTE PROCEDURE public.telesrv_guard_collectible_attribute();
 CREATE TRIGGER star_gift_collectible_pattern_guard BEFORE UPDATE OR DELETE ON public.star_gift_collectible_patterns
-    FOR EACH ROW EXECUTE FUNCTION public.telesrv_guard_collectible_attribute();
+    FOR EACH ROW EXECUTE PROCEDURE public.telesrv_guard_collectible_attribute();
 CREATE TRIGGER star_gift_collectible_backdrop_guard BEFORE UPDATE OR DELETE ON public.star_gift_collectible_backdrops
-    FOR EACH ROW EXECUTE FUNCTION public.telesrv_guard_collectible_attribute();
+    FOR EACH ROW EXECUTE PROCEDURE public.telesrv_guard_collectible_attribute();
