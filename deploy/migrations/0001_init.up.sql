@@ -5529,7 +5529,7 @@ ALTER TABLE ONLY public.user_update_watermarks
 -- ===================== и§„иЊѓ seed ж•°жЌ® =====================
 -- е…іи§¦еЏ‘е™Ё+FK зІѕзЎ®иЈ…иЅЅ seedпј€з­‰д»· pg_restoreпј‰пјЊйЃїе…Ќ seed е…¶е®ѓиЎЁи§¦еЏ‘ read-model и§¦еЏ‘е™ЁдєЊж¬Ўз”џж€ђиЎЊиЂЊж’ћй”®гЂ‚
 -- session_replication_role йњЂи¶…зє§жќѓй™ђпјЊдёЋжњ¬иїЃз§»е·Іжњ‰зљ„ CREATE EXTENSION pg_trgm еђЊдёЂе‰ЌжЏђгЂ‚
-SET session_replication_role = replica;
+-- SET session_replication_role = replica;
 
 --
 -- PostgreSQL database dump
@@ -6113,4 +6113,4 @@ SELECT pg_catalog.setval('public.users_id_seq', 1780243199, true);
 
 
 
-SET session_replication_role = DEFAULT;
+-- SET session_replication_role = DEFAULT;
