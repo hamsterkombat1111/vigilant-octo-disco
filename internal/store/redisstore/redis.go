@@ -12,11 +12,21 @@ import (
 
 // Open 按地址建立 Redis 连接并 ping 验证。
 func Open(ctx context.Context, addr, password string, db int) (*redis.Client, error) {
-	c := redis.NewClient(&redis.Options{
-		Addr:     addr,
-		Password: password,
-		DB:       db,
-	})
+	var opts *redis.Options
+	if len(addr) > 8 && (addr[:8] == "redis://" || addr[:9] == "rediss://") {
+		var err error
+		opts, err = redis.ParseURL(addr)
+		if err != nil {
+			return nil, fmt.Errorf("parse redis url: %w", err)
+		}
+	} else {
+		opts = &redis.Options{
+			Addr:     addr,
+			Password: password,
+			DB:       db,
+		}
+	}
+	c := redis.NewClient(opts)
 	if err := c.Ping(ctx).Err(); err != nil {
 		_ = c.Close()
 		return nil, fmt.Errorf("redis ping %s: %w", addr, err)

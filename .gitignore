@@ -34,3 +34,7 @@ tmp/
 *.log
 *.exe~
 
+
+telesrv_linux
+telesrv_admin_linux
+
