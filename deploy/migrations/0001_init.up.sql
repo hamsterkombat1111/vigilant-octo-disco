@@ -5554,8 +5554,8 @@ SET row_security = off;
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.users (id, access_hash, phone, first_name, last_name, username, country_code, created_at, updated_at, verified, support, about, last_seen_at, default_history_ttl_period, is_bot, bot_info_version, premium_expires_at, emoji_status_document_id, emoji_status_until, color_set, color, color_background_emoji_id, profile_color_set, profile_color, profile_color_background_emoji_id) VALUES (777000, 6599886787491911851, '42777', 'Telesrv', '', 'telesrv', '', '2026-06-19 13:35:51.253491+00', '2026-06-19 13:35:51.253491+00', true, true, '', 0, 0, false, 0, NULL, 0, 0, false, 0, 0, false, 0, 0);
-INSERT INTO public.users (id, access_hash, phone, first_name, last_name, username, country_code, created_at, updated_at, verified, support, about, last_seen_at, default_history_ttl_period, is_bot, bot_info_version, premium_expires_at, emoji_status_document_id, emoji_status_until, color_set, color, color_background_emoji_id, profile_color_set, profile_color, profile_color_background_emoji_id) VALUES (93372553, 7421896403922962293, '', 'BotFather', '', 'BotFather', '', '2026-06-19 13:35:52.688367+00', '2026-06-19 13:35:52.688367+00', true, false, '', 0, 0, true, 1, NULL, 0, 0, false, 0, 0, false, 0, 0);
+INSERT INTO public.users (id, access_hash, phone, first_name, last_name, username, country_code, created_at, updated_at, verified, support, about, last_seen_at, default_history_ttl_period, is_bot, bot_info_version, premium_expires_at, emoji_status_document_id, emoji_status_until, color_set, color, color_background_emoji_id, profile_color_set, profile_color, profile_color_background_emoji_id) VALUES (777000, 6599886787491911851, '42777', 'Telesrv', '', 'telesrv', '', '2026-06-19 13:35:51.253491+00', '2026-06-19 13:35:51.253491+00', true, true, '', 0, 0, false, 0, NULL, 0, 0, false, 0, 0, false, 0, 0) ON CONFLICT (id) DO NOTHING;
+INSERT INTO public.users (id, access_hash, phone, first_name, last_name, username, country_code, created_at, updated_at, verified, support, about, last_seen_at, default_history_ttl_period, is_bot, bot_info_version, premium_expires_at, emoji_status_document_id, emoji_status_until, color_set, color, color_background_emoji_id, profile_color_set, profile_color, profile_color_background_emoji_id) VALUES (93372553, 7421896403922962293, '', 'BotFather', '', 'BotFather', '', '2026-06-19 13:35:52.688367+00', '2026-06-19 13:35:52.688367+00', true, false, '', 0, 0, true, 1, NULL, 0, 0, false, 0, 0, false, 0, 0) ON CONFLICT (id) DO NOTHING;
 
 
 --
@@ -5580,7 +5580,7 @@ INSERT INTO public.users (id, access_hash, phone, first_name, last_name, usernam
 -- Data for Name: app_configs; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.app_configs (client, hash, config_json, updated_at) VALUES ('tdesktop', 5, '{"quote_length_max": 1024, "reactions_default": {"_": "reactionEmoji", "emoticon": "рџ‘Ќ"}, "reactions_uniq_max": 11, "reactions_in_chat_max": 3, "telegram_antispam_user_id": "5434988373", "pm_read_date_expire_period": 604800, "reactions_user_max_default": 1, "chat_read_mark_expire_period": 604800, "chat_read_mark_size_threshold": 50, "telegram_antispam_group_size_min": 200}', '2026-06-19 13:35:52.201256+00');
+INSERT INTO public.app_configs (client, hash, config_json, updated_at) VALUES ('tdesktop', 5, '{"quote_length_max": 1024, "reactions_default": {"_": "reactionEmoji", "emoticon": "рџ‘Ќ"}, "reactions_uniq_max": 11, "reactions_in_chat_max": 3, "telegram_antispam_user_id": "5434988373", "pm_read_date_expire_period": 604800, "reactions_user_max_default": 1, "chat_read_mark_expire_period": 604800, "chat_read_mark_size_threshold": 50, "telegram_antispam_group_size_min": 200}', '2026-06-19 13:35:52.201256+00') ON CONFLICT (client) DO NOTHING;
 
 
 --
@@ -5611,7 +5611,7 @@ INSERT INTO public.app_configs (client, hash, config_json, updated_at) VALUES ('
 -- Data for Name: bots; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.bots (bot_user_id, owner_user_id, token_secret, description, commands, bot_chat_history, bot_nochats, inline_placeholder, created_at, updated_at, menu_button_type, menu_button_text, menu_button_url, bot_inline_geo) VALUES (93372553, 93372553, '', 'BotFather is the one bot to rule them all. Use it to create new bot accounts and manage your existing bots.', '[{"command": "newbot", "description": "create a new bot"}, {"command": "mybots", "description": "list your bots"}, {"command": "token", "description": "show a bot''s token"}, {"command": "revoke", "description": "revoke a bot''s token"}, {"command": "cancel", "description": "cancel the current operation"}, {"command": "help", "description": "show help"}]', false, false, '', '2026-06-19 13:35:52.688367+00', '2026-06-19 13:35:52.688367+00', 0, '', '', false);
+INSERT INTO public.bots (bot_user_id, owner_user_id, token_secret, description, commands, bot_chat_history, bot_nochats, inline_placeholder, created_at, updated_at, menu_button_type, menu_button_text, menu_button_url, bot_inline_geo) VALUES (93372553, 93372553, '', 'BotFather is the one bot to rule them all. Use it to create new bot accounts and manage your existing bots.', '[{"command": "newbot", "description": "create a new bot"}, {"command": "mybots", "description": "list your bots"}, {"command": "token", "description": "show a bot''s token"}, {"command": "revoke", "description": "revoke a bot''s token"}, {"command": "cancel", "description": "cancel the current operation"}, {"command": "help", "description": "show help"}]', false, false, '', '2026-06-19 13:35:52.688367+00', '2026-06-19 13:35:52.688367+00', 0, '', '', false) ON CONFLICT (bot_user_id) DO NOTHING;
 
 
 --
@@ -5768,16 +5768,16 @@ INSERT INTO public.bots (bot_user_id, owner_user_id, token_secret, description, 
 -- Data for Name: countries; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.countries (iso2, default_name, name, hidden, order_index, updated_at) VALUES ('US', 'United States', '', false, 10, '2026-06-19 13:35:51.214267+00');
-INSERT INTO public.countries (iso2, default_name, name, hidden, order_index, updated_at) VALUES ('CN', 'China', '', false, 20, '2026-06-19 13:35:51.214267+00');
+INSERT INTO public.countries (iso2, default_name, name, hidden, order_index, updated_at) VALUES ('US', 'United States', '', false, 10, '2026-06-19 13:35:51.214267+00') ON CONFLICT (iso2) DO NOTHING;
+INSERT INTO public.countries (iso2, default_name, name, hidden, order_index, updated_at) VALUES ('CN', 'China', '', false, 20, '2026-06-19 13:35:51.214267+00') ON CONFLICT (iso2) DO NOTHING;
 
 
 --
 -- Data for Name: country_codes; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.country_codes (id, iso2, country_code, prefixes, patterns, order_index) VALUES (1, 'US', '1', '{""}', '{"XXX XXX XXXX"}', 10);
-INSERT INTO public.country_codes (id, iso2, country_code, prefixes, patterns, order_index) VALUES (2, 'CN', '86', '{""}', '{"XXX XXXX XXXX"}', 20);
+INSERT INTO public.country_codes (id, iso2, country_code, prefixes, patterns, order_index) VALUES (1, 'US', '1', '{""}', '{"XXX XXX XXXX"}', 10) ON CONFLICT (id) DO NOTHING;
+INSERT INTO public.country_codes (id, iso2, country_code, prefixes, patterns, order_index) VALUES (2, 'CN', '86', '{""}', '{"XXX XXXX XXXX"}', 20) ON CONFLICT (id) DO NOTHING;
 
 
 --
@@ -5952,10 +5952,10 @@ INSERT INTO public.country_codes (id, iso2, country_code, prefixes, patterns, or
 -- Data for Name: read_model_versions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.read_model_versions (model, owner_user_id, peer_type, peer_id, version, updated_at, hash) VALUES ('contact_account', 777000, 'user', 777000, 1, '2026-06-19 13:35:53.204092+00', 8080089745885824);
-INSERT INTO public.read_model_versions (model, owner_user_id, peer_type, peer_id, version, updated_at, hash) VALUES ('contact_account', 93372553, 'user', 93372553, 1, '2026-06-19 13:35:53.204092+00', 3925565686878508);
-INSERT INTO public.read_model_versions (model, owner_user_id, peer_type, peer_id, version, updated_at, hash) VALUES ('channel_active_memberships', 777000, 'user', 777000, 1, '2026-06-19 13:35:53.311258+00', 2767535233995134);
-INSERT INTO public.read_model_versions (model, owner_user_id, peer_type, peer_id, version, updated_at, hash) VALUES ('channel_active_memberships', 93372553, 'user', 93372553, 1, '2026-06-19 13:35:53.311258+00', 1406287033083140);
+INSERT INTO public.read_model_versions (model, owner_user_id, peer_type, peer_id, version, updated_at, hash) VALUES ('contact_account', 777000, 'user', 777000, 1, '2026-06-19 13:35:53.204092+00', 8080089745885824) ON CONFLICT (model, owner_user_id, peer_type, peer_id) DO UPDATE SET version = EXCLUDED.version, hash = EXCLUDED.hash, updated_at = EXCLUDED.updated_at;
+INSERT INTO public.read_model_versions (model, owner_user_id, peer_type, peer_id, version, updated_at, hash) VALUES ('contact_account', 93372553, 'user', 93372553, 1, '2026-06-19 13:35:53.204092+00', 3925565686878508) ON CONFLICT (model, owner_user_id, peer_type, peer_id) DO UPDATE SET version = EXCLUDED.version, hash = EXCLUDED.hash, updated_at = EXCLUDED.updated_at;
+INSERT INTO public.read_model_versions (model, owner_user_id, peer_type, peer_id, version, updated_at, hash) VALUES ('channel_active_memberships', 777000, 'user', 777000, 1, '2026-06-19 13:35:53.311258+00', 2767535233995134) ON CONFLICT (model, owner_user_id, peer_type, peer_id) DO UPDATE SET version = EXCLUDED.version, hash = EXCLUDED.hash, updated_at = EXCLUDED.updated_at;
+INSERT INTO public.read_model_versions (model, owner_user_id, peer_type, peer_id, version, updated_at, hash) VALUES ('channel_active_memberships', 93372553, 'user', 93372553, 1, '2026-06-19 13:35:53.311258+00', 1406287033083140) ON CONFLICT (model, owner_user_id, peer_type, peer_id) DO UPDATE SET version = EXCLUDED.version, hash = EXCLUDED.hash, updated_at = EXCLUDED.updated_at;
 
 
 --
